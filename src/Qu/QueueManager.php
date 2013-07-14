@@ -12,6 +12,8 @@ use Kdyby\Redis\RedisClient;
 class QueueManager
 {
 
+	const QUEUE_KEY = 'queues';
+	
 	/** @var RedisClient */
 	private $redis;
 
@@ -50,7 +52,7 @@ class QueueManager
 	{
 		$this->redis->multi();
 		$this->redis->sAdd('queues', $queue);
-		$this->redis->rPush($this->formatQueueKey($queue), $message->getPayload());
+		$this->redis->rPush($this->formatQueueKey($queue), json_encode($message));
 		$this->redis->exec();
 		return $this;
 	}
@@ -66,10 +68,26 @@ class QueueManager
 		if ($payload === FALSE) {
 			return NULL;
 		}
-		return new Message($payload);
+		return new Message((array)json_decode($payload));
 	}
 
+	
+	public function listQueues()
+	{
+		$queues = $this->redis->sMembers(self::QUEUE_KEY);
+		return $queues;
+	}
 
+	
+	
+	public function listQueueMessages($queue)
+	{
+		$messages = $this->redis->lRange($this->formatQueueKey($queue), 0, -1);
+		return $messages;
+	}
+	
+	
+	
 	/**
 	 * @param string $queue
 	 * @return QueueManager
@@ -77,7 +95,7 @@ class QueueManager
 	public function clearQueue($queue)
 	{
 		$this->redis->multi();
-		$this->redis->sRem('queues', $queue);
+		$this->redis->sRem(self::QUEUE_KEY, $queue);
 		$this->redis->lTrim($this->formatQueueKey($queue), 1, 0);
 		$this->redis->exec();
 

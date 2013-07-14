@@ -7,7 +7,7 @@ namespace Qu;
  *
  * @author Martin Bažík <martin@bazo.sk>
  */
-class Message
+class Message implements \JsonSerializable
 {
 
 	/** @var int */
@@ -28,7 +28,6 @@ class Message
 	{
 		$this->payload = $payload;
 	}
-
 
 	/**
 	 * @return string
@@ -55,6 +54,12 @@ class Message
 	public function isPropagationStopped()
 	{
 		return $this->propagationStopped;
+	}
+
+
+	public function jsonSerialize()
+	{
+		return $this->payload;
 	}
 
 
