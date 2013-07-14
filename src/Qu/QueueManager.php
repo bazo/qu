@@ -26,6 +26,22 @@ class QueueManager
 
 
 	/**
+	 * Select database
+	 * @param int $db
+	 * @return QueueManager
+	 * @throws \InvalidArgumentException
+	 */
+	public function selectDatabase($db)
+	{
+		if (!is_int($db) or ($db < 0) or ($db > 15)) {
+			throw new \InvalidArgumentException('db must be an integer between 0 and 15');
+		}
+		$this->redis->select($db);
+		return $this;
+	}
+
+
+	/**
 	 * @param string $queue
 	 * @param Message $message
 	 * @return QueueManager
