@@ -1,0 +1,21 @@
+{
+	"name": "bazo/qu",
+	"type": "library",
+	"description": "Small redis based queue",
+	"keywords": ["redis", "queue", "mq"],
+	"homepage": "https://github.com/bazo/qu",
+	"authors": [
+		{
+			"name": "Martin Bažík",
+			"email": "martin@bazo.sk",
+			"homepage": "http://bazo.sk"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0",
+		"kdyby/redis": "@dev"
+	},
+	"autoload": {
+		"psr-0": {"Qu": "src/"}
+	}
+}
