@@ -44,10 +44,10 @@ class Consumer
 	}
 
 
-	public function consume($queue)
+	public function consume($queue, $timeout = 0)
 	{
 		while (TRUE) {
-			$message = $this->qm->getMessage($queue);
+			$message = $this->qm->getMessage($queue, $timeout);
 			if ($message !== NULL) {
 				$this->fireCallbacks($message);
 				

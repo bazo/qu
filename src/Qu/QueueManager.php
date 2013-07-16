@@ -60,15 +60,17 @@ class QueueManager
 
 	/**
 	 * @param string $queue
+	 * @param int timeout timeout in seconds
 	 * @return Message $message
 	 */
-	public function getMessage($queue)
+	public function getMessage($queue, $timeout = 0)
 	{
-		$payload = $this->redis->blPop($this->formatQueueKey($queue));
-		if ($payload === FALSE) {
+		$payload = $this->redis->blPop($this->formatQueueKey($queue), $timeout);
+		if (empty($payload)) {
 			return NULL;
 		}
-		return new Message((array)json_decode($payload));
+		
+		return new Message((array)json_decode($payload[1]));
 	}
 
 	
