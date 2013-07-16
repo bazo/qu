@@ -51,6 +51,10 @@ class Consumer
 			if ($message !== NULL) {
 				$this->fireCallbacks($message);
 			}
+			
+			if($message->isRequeued()) {
+				$this->qm->publishMessage($queue, $message);
+			}
 		}
 	}
 

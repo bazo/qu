@@ -16,10 +16,14 @@ class Message implements \JsonSerializable
 	/** @var string */
 	private $payload;
 
+	/** @var bool */
+	private $requeued = FALSE;
+
 	/**
 	 * @var Boolean Whether no further event listeners should be triggered
 	 */
 	private $propagationStopped = FALSE;
+
 
 	/**
 	 * @param string $payload
@@ -29,6 +33,7 @@ class Message implements \JsonSerializable
 		$this->payload = $payload;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -37,7 +42,7 @@ class Message implements \JsonSerializable
 		return $this->payload;
 	}
 
-	
+
 	/**
 	 * Stops the propagation of the message to further callbacks.
 	 *
@@ -50,7 +55,8 @@ class Message implements \JsonSerializable
 	{
 		$this->propagationStopped = TRUE;
 	}
-	
+
+
 	public function isPropagationStopped()
 	{
 		return $this->propagationStopped;
@@ -62,6 +68,25 @@ class Message implements \JsonSerializable
 		return $this->payload;
 	}
 
+
+	/**
+	 * Requeue message
+	 * @return Message
+	 */
+	public function requeue()
+	{
+		$this->requeued = TRUE;
+		return $this;
+	}
+
+	/**
+	 * If message is requeued
+	 * @return bool
+	 */
+	public function isRequeued()
+	{
+		return $this->requeued;
+	}
 
 
 }
