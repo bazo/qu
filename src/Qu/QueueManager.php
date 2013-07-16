@@ -64,7 +64,7 @@ class QueueManager
 	 */
 	public function getMessage($queue)
 	{
-		$payload = $this->redis->lPop($this->formatQueueKey($queue));
+		$payload = $this->redis->blPop($this->formatQueueKey($queue));
 		if ($payload === FALSE) {
 			return NULL;
 		}
