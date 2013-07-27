@@ -190,8 +190,8 @@ class ListMessagesTest extends PHPUnit_Framework_TestCase
 	 */
 	public function hashMaps() {
 		return [
-			[[]], 0, ''],
-			[['numeric', 0, "- numeric\n"],
+			[[], 0, ''],
+			[['numeric'], 0, "- numeric\n"],
 			[['key' => 'value'], 0,	"key: value\n"],
 			[['key' => ['deeper' => 'nested']],	0, "key:\n  deeper: nested\n"],
 			[['numeric'], 2, "    - numeric\n"],
