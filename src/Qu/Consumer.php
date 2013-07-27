@@ -13,12 +13,17 @@ class Consumer
 	/** @var QueueManager */
 	private $qm;
 
+	public $queue;
 
+	public $callbacks = array();
+
+	/**
+	 * @param QueueManager $qm
+	 */
 	public function __construct(QueueManager $qm)
 	{
 		$this->qm = $qm;
 	}
-
 
 	/**
 	 * Bind a queue to listen on
@@ -31,7 +36,6 @@ class Consumer
 		return $this;
 	}
 
-
 	/**
 	 * Add a callback
 	 * @param Callable $callback
@@ -43,14 +47,18 @@ class Consumer
 		return $this;
 	}
 
-
+	/**
+	 * @param $queue
+	 * @param int $timeout
+	 * @return void
+	 */
 	public function consume($queue, $timeout = 0)
 	{
 		while (TRUE) {
 			$message = $this->qm->getMessage($queue, $timeout);
 			if ($message !== NULL) {
 				$this->fireCallbacks($message);
-				
+
 				if($message->isRequeued()) {
 					$this->qm->publishMessage($queue, $message);
 				}
@@ -58,18 +66,18 @@ class Consumer
 		}
 	}
 
-
+	/**
+	 * @param Message $message
+	 * @return void
+	 */
 	private function fireCallbacks(Message $message)
 	{
 		foreach ($this->callbacks as $callback) {
-			if (!$message->isPropagationStopped()) {
-				$callback($message);
-			} else {
-				break;
+			if ($message->isPropagationStopped()) {
+				return;
 			}
+			$callback($message);
 		}
 	}
 
-
 }
-

@@ -17,7 +17,6 @@ class QueueManager
 	/** @var RedisClient */
 	private $redis;
 
-
 	/**
 	 * @param \Kdyby\Redis\RedisClient $redis
 	 */
@@ -25,7 +24,6 @@ class QueueManager
 	{
 		$this->redis = $redis;
 	}
-
 
 	/**
 	 * Select database
@@ -42,7 +40,6 @@ class QueueManager
 		return $this;
 	}
 
-
 	/**
 	 * @param string $queue
 	 * @param Message $message
@@ -56,7 +53,6 @@ class QueueManager
 		$this->redis->exec();
 		return $this;
 	}
-
 
 	/**
 	 * @param string $queue
@@ -73,22 +69,24 @@ class QueueManager
 		return new Message((array)json_decode($payload[1]));
 	}
 
-	
+	/**
+	 * @return mixed
+	 */
 	public function listQueues()
 	{
 		$queues = $this->redis->sMembers(self::QUEUE_KEY);
 		return $queues;
 	}
 
-	
-	
+	/**
+	 * @param $queue
+	 * @return mixed
+	 */
 	public function listQueueMessages($queue)
 	{
 		$messages = $this->redis->lRange($this->formatQueueKey($queue), 0, -1);
 		return $messages;
 	}
-	
-	
 	
 	/**
 	 * @param string $queue
@@ -104,12 +102,14 @@ class QueueManager
 		return $this;
 	}
 
-
+	/**
+	 * @param string $queue
+	 * @return string
+	 */
 	private function formatQueueKey($queue)
 	{
 		return 'queue:' . $queue;
 	}
-
 
 }
 
