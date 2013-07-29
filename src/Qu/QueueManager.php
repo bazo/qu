@@ -13,9 +13,11 @@ class QueueManager
 {
 
 	const QUEUE_KEY = 'queues';
-	
+
+
 	/** @var RedisClient */
 	private $redis;
+
 
 	/**
 	 * @param \Kdyby\Redis\RedisClient $redis
@@ -24,6 +26,7 @@ class QueueManager
 	{
 		$this->redis = $redis;
 	}
+
 
 	/**
 	 * Select database
@@ -36,9 +39,11 @@ class QueueManager
 		if (!is_int($db) or ($db < 0) or ($db > 15)) {
 			throw new \InvalidArgumentException('db must be an integer between 0 and 15');
 		}
+
 		$this->redis->select($db);
 		return $this;
 	}
+
 
 	/**
 	 * @param string $queue
@@ -54,6 +59,7 @@ class QueueManager
 		return $this;
 	}
 
+
 	/**
 	 * @param string $queue
 	 * @param int timeout timeout in seconds
@@ -65,9 +71,10 @@ class QueueManager
 		if (empty($payload)) {
 			return NULL;
 		}
-		
-		return new Message((array)json_decode($payload[1]));
+
+		return new Message((array) json_decode($payload[1]));
 	}
+
 
 	/**
 	 * @return mixed
@@ -75,8 +82,10 @@ class QueueManager
 	public function listQueues()
 	{
 		$queues = $this->redis->sMembers(self::QUEUE_KEY);
+
 		return $queues;
 	}
+
 
 	/**
 	 * @param $queue
@@ -85,9 +94,11 @@ class QueueManager
 	public function listQueueMessages($queue)
 	{
 		$messages = $this->redis->lRange($this->formatQueueKey($queue), 0, -1);
+
 		return $messages;
 	}
-	
+
+
 	/**
 	 * @param string $queue
 	 * @return QueueManager
@@ -102,6 +113,7 @@ class QueueManager
 		return $this;
 	}
 
+
 	/**
 	 * @param string $queue
 	 * @return string
@@ -110,6 +122,7 @@ class QueueManager
 	{
 		return 'queue:' . $queue;
 	}
+
 
 }
 

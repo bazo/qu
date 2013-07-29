@@ -5,7 +5,6 @@ namespace Qu\Tools\Console\Command;
 use Symfony\Component\Console;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Elastica\Client;
 
 /**
  * QueueInfo
@@ -17,14 +16,16 @@ class QueueInfo extends Console\Command\Command
 	/** @var \Qu\QueueManager */
 	private $qm;
 
+
 	/**
 	 * @param \Qu\QueueManager $qm
 	 */
-	function __construct(\Qu\QueueManager $qm)
+	public function __construct(\Qu\QueueManager $qm)
 	{
 		$this->qm = $qm;
 		parent::__construct(NULL);
 	}
+
 
 	/**
 	 * @return void
@@ -36,6 +37,7 @@ class QueueInfo extends Console\Command\Command
 			->setDescription('shows info about queues')
 		;
 	}
+
 
 	/**
 	 * @param Console\Input\InputInterface $input
@@ -55,12 +57,15 @@ class QueueInfo extends Console\Command\Command
 			$messagesCount = count($this->qm->listQueueMessages($queueName));
 			$table->addRow([$queueName, $messagesCount]);
 		}
-		
+
 		$table->render($output);
-		
 	}
 
-	protected function getTableHelper() {
+
+	protected function getTableHelper()
+	{
 		return new Console\Helper\TableHelper;
 	}
+
+
 }

@@ -12,10 +12,10 @@ class Consumer
 
 	/** @var QueueManager */
 	private $qm;
+	
+	/** @var array */
+	public $callbacks = [];
 
-	public $queue;
-
-	public $callbacks = array();
 
 	/**
 	 * @param QueueManager $qm
@@ -25,27 +25,18 @@ class Consumer
 		$this->qm = $qm;
 	}
 
-	/**
-	 * Bind a queue to listen on
-	 * @param type $queue
-	 * @return IronMQConsumer
-	 */
-	public function bindQueue($queue)
-	{
-		$this->queue = $queue;
-		return $this;
-	}
 
 	/**
 	 * Add a callback
 	 * @param Callable $callback
-	 * @return IronMQConsumer
+	 * @return Consumer
 	 */
 	public function addCallback(Callable $callback)
 	{
 		$this->callbacks[spl_object_hash($callback)] = $callback;
 		return $this;
 	}
+
 
 	/**
 	 * @param $queue
@@ -59,12 +50,13 @@ class Consumer
 			if ($message !== NULL) {
 				$this->fireCallbacks($message);
 
-				if($message->isRequeued()) {
+				if ($message->isRequeued()) {
 					$this->qm->publishMessage($queue, $message);
 				}
 			}
 		}
 	}
+
 
 	/**
 	 * @param Message $message
@@ -76,8 +68,10 @@ class Consumer
 			if ($message->isPropagationStopped()) {
 				return;
 			}
+			
 			$callback($message);
 		}
 	}
+
 
 }

@@ -10,9 +10,6 @@ namespace Qu;
 class Message implements \JsonSerializable
 {
 
-	/** @var int */
-	private $timestamp;
-
 	/** @var string */
 	private $payload;
 
@@ -24,6 +21,7 @@ class Message implements \JsonSerializable
 	 */
 	private $propagationStopped = FALSE;
 
+
 	/**
 	 * @param string $payload
 	 */
@@ -32,6 +30,7 @@ class Message implements \JsonSerializable
 		$this->payload = $payload;
 	}
 
+
 	/**
 	 * @return string
 	 */
@@ -39,6 +38,7 @@ class Message implements \JsonSerializable
 	{
 		return $this->payload;
 	}
+
 
 	/**
 	 * Stops the propagation of the message to further callbacks.
@@ -54,6 +54,7 @@ class Message implements \JsonSerializable
 		$this->propagationStopped = TRUE;
 	}
 
+
 	/**
 	 * @return bool
 	 */
@@ -62,6 +63,7 @@ class Message implements \JsonSerializable
 		return $this->propagationStopped;
 	}
 
+
 	/**
 	 * @return mixed|string
 	 */
@@ -69,6 +71,7 @@ class Message implements \JsonSerializable
 	{
 		return $this->payload;
 	}
+
 
 	/**
 	 * Requeue message
@@ -80,6 +83,7 @@ class Message implements \JsonSerializable
 		return $this;
 	}
 
+
 	/**
 	 * If message is requeued
 	 * @return bool
@@ -88,5 +92,6 @@ class Message implements \JsonSerializable
 	{
 		return $this->requeued;
 	}
+
 
 }

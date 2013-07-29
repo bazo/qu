@@ -5,7 +5,6 @@ namespace Qu\Tools\Console\Command;
 use Symfony\Component\Console;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Elastica\Client;
 
 /**
  * QueueInfo
@@ -17,11 +16,13 @@ class ListMessages extends Console\Command\Command
 	/** @var \Qu\QueueManager */
 	private $qm;
 
-	function __construct(\Qu\QueueManager $qm)
+
+	public function __construct(\Qu\QueueManager $qm)
 	{
 		$this->qm = $qm;
 		parent::__construct(NULL);
 	}
+
 
 	/**
 	 * @return void
@@ -36,6 +37,7 @@ class ListMessages extends Console\Command\Command
 		;
 	}
 
+
 	/**
 	 * @param Console\Input\InputInterface $input
 	 * @param Console\Output\OutputInterface $output
@@ -45,35 +47,37 @@ class ListMessages extends Console\Command\Command
 	{
 		$queue = $input->getArgument('queue');
 		$pretty = $input->getOption('pretty');
-		if($queue === null) {
+
+		if ($queue === NULL) {
 			$queues = $this->qm->listQueues();
 
 			$dialog = $this->getDialogHelper();
 			$selection = $dialog->select(
-				$output, 
-				'Please select a queue', 
-				$queues, 
-				$default = null,
-				$attempts = false, 'Value "%s" is invalid',
-				$multi = false
+				$output, 'Please select a queue',
+				$queues,
+				$default = NULL,
+				$attempts = FALSE,
+				'Value "%s" is invalid',
+				$multi = FALSE
 			);
-			
+
 			$queue = $queues[$selection];
 		}
-		
+
 		$messages = $this->qm->listQueueMessages($queue);
 		$output->writeln(sprintf('<info>%d</info> messages in queue <info>%s</info>', count($messages), $queue));
-		
-		foreach($messages as $message) {
-			
-			if($pretty) {
-				echo $this->format((array)json_decode($message));
+
+		foreach ($messages as $message) {
+
+			if ($pretty) {
+				$output->writeln($this->format(json_decode($message, $asArray = TRUE)));
 				$output->writeln('');
 			} else {
 				$output->writeln($message);
 			}
 		}
 	}
+
 
 	/**
 	 * @param array $hashmap
@@ -96,6 +100,7 @@ class ListMessages extends Console\Command\Command
 		return $output;
 	}
 
+
 	/**
 	 * @param $array
 	 * @return bool
@@ -105,11 +110,15 @@ class ListMessages extends Console\Command\Command
 		return array_keys($array) !== range(0, count($array) - 1);
 	}
 
+
 	/**
 	 * @return Console\Helper\DialogHelper
 	 */
-	protected function getDialogHelper() {
+	protected function getDialogHelper()
+	{
 		return new Console\Helper\DialogHelper;
 	}
+
+
 }
 

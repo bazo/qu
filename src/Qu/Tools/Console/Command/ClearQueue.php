@@ -5,7 +5,6 @@ namespace Qu\Tools\Console\Command;
 use Symfony\Component\Console;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
-use Elastica\Client;
 
 /**
  * QueueInfo
@@ -17,14 +16,16 @@ class ClearQueue extends Console\Command\Command
 	/** @var \Qu\QueueManager */
 	private $qm;
 
+
 	/**
 	 * @param \Qu\QueueManager $qm
 	 */
-	function __construct(\Qu\QueueManager $qm)
+	public function __construct(\Qu\QueueManager $qm)
 	{
 		$this->qm = $qm;
 		parent::__construct(NULL);
 	}
+
 
 	/**
 	 * @return void
@@ -38,6 +39,7 @@ class ClearQueue extends Console\Command\Command
 		;
 	}
 
+
 	/**
 	 * @param Console\Input\InputInterface $input
 	 * @param Console\Output\OutputInterface $output
@@ -46,31 +48,34 @@ class ClearQueue extends Console\Command\Command
 	protected function execute(Console\Input\InputInterface $input, Console\Output\OutputInterface $output)
 	{
 		$queue = $input->getArgument('queue');
-		if($queue === null) {
+		if ($queue === null) {
 			$queues = $this->qm->listQueues();
 
 			$dialog = $this->getDialogHelper();
 			$selection = $dialog->select(
-				$output,
-				'Please select a queue',
-				$queues,
-				$default = NULL,
-				$attempts = FALSE, 'Value "%s" is invalid',
-				$multi = FALSE
+					$output,
+					'Please select a queue',
+					$queues, $default = NULL,
+					$attempts = FALSE,
+					'Value "%s" is invalid',
+					$multi = FALSE
 			);
-			
+
 			$queue = $queues[$selection];
 		}
-		
+
 		$this->qm->clearQueue($queue);
 	}
+
 
 	/**
 	 * @return Console\Helper\DialogHelper
 	 */
-	protected function getDialogHelper() {
+	protected function getDialogHelper()
+	{
 		return new Console\Helper\DialogHelper;
 	}
+
 
 }
 
