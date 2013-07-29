@@ -23,7 +23,9 @@ class ListMessages extends Console\Command\Command
 		parent::__construct(NULL);
 	}
 
-
+	/**
+	 * @return void
+	 */
 	protected function configure()
 	{
 		$this
@@ -34,23 +36,26 @@ class ListMessages extends Console\Command\Command
 		;
 	}
 
-
+	/**
+	 * @param Console\Input\InputInterface $input
+	 * @param Console\Output\OutputInterface $output
+	 * @return int|null|void
+	 */
 	protected function execute(Console\Input\InputInterface $input, Console\Output\OutputInterface $output)
 	{
 		$queue = $input->getArgument('queue');
 		$pretty = $input->getOption('pretty');
-		
-		if($queue === NULL) {
-			$dialog = new Console\Helper\DialogHelper;
+		if($queue === null) {
 			$queues = $this->qm->listQueues();
-			
+
+			$dialog = $this->getDialogHelper();
 			$selection = $dialog->select(
 				$output, 
 				'Please select a queue', 
 				$queues, 
-				$default = NULL, 
-				$attempts = FALSE, 'Value "%s" is invalid', 
-				$multi = FALSE
+				$default = null,
+				$attempts = false, 'Value "%s" is invalid',
+				$multi = false
 			);
 			
 			$queue = $queues[$selection];
@@ -69,7 +74,12 @@ class ListMessages extends Console\Command\Command
 			}
 		}
 	}
-	
+
+	/**
+	 * @param array $hashmap
+	 * @param int $indentLevel
+	 * @return string
+	 */
 	public function format(array $hashmap, $indentLevel = 0)
 	{
 		$prefix = str_repeat(' ', 2 * $indentLevel);
@@ -86,11 +96,20 @@ class ListMessages extends Console\Command\Command
 		return $output;
 	}
 
+	/**
+	 * @param $array
+	 * @return bool
+	 */
 	private function isAssocArray($array)
 	{
 		return array_keys($array) !== range(0, count($array) - 1);
 	}
 
-
+	/**
+	 * @return Console\Helper\DialogHelper
+	 */
+	protected function getDialogHelper() {
+		return new Console\Helper\DialogHelper;
+	}
 }
 

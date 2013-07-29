@@ -24,7 +24,6 @@ class Message implements \JsonSerializable
 	 */
 	private $propagationStopped = FALSE;
 
-
 	/**
 	 * @param string $payload
 	 */
@@ -32,7 +31,6 @@ class Message implements \JsonSerializable
 	{
 		$this->payload = $payload;
 	}
-
 
 	/**
 	 * @return string
@@ -42,7 +40,6 @@ class Message implements \JsonSerializable
 		return $this->payload;
 	}
 
-
 	/**
 	 * Stops the propagation of the message to further callbacks.
 	 *
@@ -50,24 +47,28 @@ class Message implements \JsonSerializable
 	 * further callbacks will be triggered once any consumer calls
 	 * stopPropagation().
 	 *
+	 * @return void
 	 */
 	public function stopPropagation()
 	{
 		$this->propagationStopped = TRUE;
 	}
 
-
+	/**
+	 * @return bool
+	 */
 	public function isPropagationStopped()
 	{
 		return $this->propagationStopped;
 	}
 
-
+	/**
+	 * @return mixed|string
+	 */
 	public function jsonSerialize()
 	{
 		return $this->payload;
 	}
-
 
 	/**
 	 * Requeue message
@@ -88,6 +89,4 @@ class Message implements \JsonSerializable
 		return $this->requeued;
 	}
 
-
 }
-

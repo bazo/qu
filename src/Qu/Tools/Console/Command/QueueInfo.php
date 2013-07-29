@@ -17,13 +17,18 @@ class QueueInfo extends Console\Command\Command
 	/** @var \Qu\QueueManager */
 	private $qm;
 
+	/**
+	 * @param \Qu\QueueManager $qm
+	 */
 	function __construct(\Qu\QueueManager $qm)
 	{
 		$this->qm = $qm;
 		parent::__construct(NULL);
 	}
 
-
+	/**
+	 * @return void
+	 */
 	protected function configure()
 	{
 		$this
@@ -32,10 +37,14 @@ class QueueInfo extends Console\Command\Command
 		;
 	}
 
-
+	/**
+	 * @param Console\Input\InputInterface $input
+	 * @param Console\Output\OutputInterface $output
+	 * @return int|null|void
+	 */
 	protected function execute(Console\Input\InputInterface $input, Console\Output\OutputInterface $output)
 	{
-		$table = new Console\Helper\TableHelper;
+		$table = $this->getTableHelper();
 
 		$output->writeln('Queues:');
 
@@ -51,6 +60,7 @@ class QueueInfo extends Console\Command\Command
 		
 	}
 
-
+	protected function getTableHelper() {
+		return new Console\Helper\TableHelper;
+	}
 }
-
